@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getIssues, getFloors, createTicket } from '../../api';
+import { getIssues, getFloors, createTicket } from '../../api/api';
 import QuickIssues from './QuickIssues';
 import SelectionGroup from './SelectionGroup';
 

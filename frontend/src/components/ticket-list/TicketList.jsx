@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getTickets } from '../../api';
+import { getTickets } from '../../api/api';
 import ListControls from './ListControls';
 import TicketCard from './TicketCard';
 import Pagination from '../common/Pagination';

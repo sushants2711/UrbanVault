@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getTicket, performTicketAction, getUsers } from '../../api';
+import { getTicket, performTicketAction, getUsers } from '../../api/api';
 import TicketInfo from './TicketInfo';
 import ActionPanel from './ActionPanel';
 import TicketTimeline from './TicketTimeline';
@@ -53,7 +53,7 @@ export default function TicketDetail({ simulateUser }) {
     if (!comment.trim()) return;
     setActionLoading(true);
     try {
-      const api = (await import('../../api')).default;
+      const api = (await import('../../api/api')).default;
       await api.post('activities/', {
         ticket: ticketId,
         type: 'COMMENT',
