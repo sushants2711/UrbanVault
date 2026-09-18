@@ -18,27 +18,21 @@ export default function TicketList() {
   const fetchTickets = async () => {
     setLoading(true);
     try {
-      const status = tab === 0 ? 'open' : 'closed';
-      const response = await getTickets({ status, page, search });
-      
-      let fetchedTickets = response.data.results;
-      
-      if (filterBy !== 'all') {
-        fetchedTickets = fetchedTickets.filter(t => t.floors_detail.some(f => f.name === filterBy));
-      }
-
-      if (statusFilter !== 'all') {
-        fetchedTickets = fetchedTickets.filter(t => t.status === statusFilter);
+      let status = tab === 0 ? 'open' : 'closed';
+      if (tab === 0 && statusFilter !== 'all') {
+        status = statusFilter;
       }
       
-      if (sortBy === 'newest') {
-        fetchedTickets.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-      } else if (sortBy === 'oldest') {
-        fetchedTickets.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
-      }
-
-      setTickets(fetchedTickets);
-      setTotalPages(Math.ceil(response.data.count / 4));
+      const response = await getTickets({ 
+        status, 
+        page, 
+        search,
+        floor: filterBy,
+        sort_by: sortBy
+      });
+      
+      setTickets(response.data.results);
+      setTotalPages(Math.ceil(response.data.count / 10));
     } catch (error) {
       console.error("Error fetching tickets:", error);
     } finally {

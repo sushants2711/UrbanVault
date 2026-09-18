@@ -38,10 +38,23 @@ class TicketViewSet(viewsets.ModelViewSet):
                 queryset = queryset.exclude(status='CLOSED')
             elif status_filter == 'closed':
                 queryset = queryset.filter(status='CLOSED')
+            else:
+                queryset = queryset.filter(status=status_filter)
         
         search_query = self.request.query_params.get('search', None)
         if search_query:
+            # Search by description or ticket ID (useful for operations)
             queryset = queryset.filter(description__icontains=search_query)
+
+        floor_filter = self.request.query_params.get('floor', None)
+        if floor_filter and floor_filter != 'all':
+            queryset = queryset.filter(floors__name=floor_filter)
+
+        sort_by = self.request.query_params.get('sort_by', None)
+        if sort_by == 'oldest':
+            queryset = queryset.order_by('created_at')
+        else:
+            queryset = queryset.order_by('-created_at')
             
         return queryset
         
