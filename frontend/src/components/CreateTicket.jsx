@@ -189,7 +189,7 @@ export default function CreateTicket() {
               </button>
               <button
                 type="submit"
-                disabled={loading}
+                disabled={loading || selectedIssues.length === 0 || selectedFloors.length === 0}
                 className="px-5 py-2.5 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-lg shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
               >
                 {loading ? 'Submitting...' : 'Submit Request'}
