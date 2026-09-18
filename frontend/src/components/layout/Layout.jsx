@@ -1,6 +1,9 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 export default function Layout({ children, simulateUser, setSimulateUser }) {
+  const location = useLocation();
+  const showRoleSimulator = location.pathname.startsWith('/ticket/');
+
   return (
     <div className="min-h-screen flex flex-col w-full bg-slate-50 font-sans text-slate-900">
       
@@ -22,28 +25,30 @@ export default function Layout({ children, simulateUser, setSimulateUser }) {
             </Link>
 
             {/* Role Simulator */}
-            <div className="flex items-center gap-3">
-              <div className="hidden md:flex flex-col text-right mr-2">
-                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Simulating Role</span>
-                <span className="text-sm font-semibold text-indigo-600">{simulateUser}</span>
-              </div>
-              <div className="relative">
-                <select
-                  value={simulateUser}
-                  onChange={(e) => setSimulateUser(e.target.value)}
-                  className="appearance-none bg-slate-100 hover:bg-slate-200 border-none text-slate-700 font-semibold py-2.5 pl-4 pr-10 rounded-xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors"
-                >
-                  <option value="Client">Client</option>
-                  <option value="Department POC">Department POC</option>
-                  <option value="Worker/Technician">Worker/Technician</option>
-                </select>
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-500">
-                  <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                    <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-                  </svg>
+            {showRoleSimulator && (
+              <div className="flex items-center gap-3">
+                <div className="hidden md:flex flex-col text-right mr-2">
+                  <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Simulating Role</span>
+                  <span className="text-sm font-semibold text-indigo-600">{simulateUser}</span>
+                </div>
+                <div className="relative">
+                  <select
+                    value={simulateUser}
+                    onChange={(e) => setSimulateUser(e.target.value)}
+                    className="appearance-none bg-slate-100 hover:bg-slate-200 border-none text-slate-700 font-semibold py-2.5 pl-4 pr-10 rounded-xl cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors"
+                  >
+                    <option value="Client">Client</option>
+                    <option value="Department POC">Department POC</option>
+                    <option value="Worker/Technician">Worker/Technician</option>
+                  </select>
+                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-500">
+                    <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                      <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                    </svg>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
 
           </div>
         </div>
