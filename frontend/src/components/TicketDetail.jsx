@@ -10,6 +10,7 @@ export default function TicketDetail({ simulateUser }) {
   const [comment, setComment] = useState('');
   const [users, setUsers] = useState([]);
   const [selectedWorker, setSelectedWorker] = useState('');
+  const [resolutionNotes, setResolutionNotes] = useState('');
   const [actionLoading, setActionLoading] = useState(false);
 
   const fetchTicket = async () => {
@@ -35,6 +36,7 @@ export default function TicketDetail({ simulateUser }) {
     try {
       const data = { action: actionType, actor_name: simulateUser, comment: '' };
       if (actionType === 'ASSIGN_WORKER') data.assignee_id = selectedWorker;
+      if (actionType === 'SUBMIT_ASSESSMENT') data.comment = resolutionNotes;
       await performTicketAction(ticketId, data);
       fetchTicket(); 
     } catch (e) {
@@ -193,18 +195,27 @@ export default function TicketDetail({ simulateUser }) {
           )}
 
           {ticket.status === 'PENDING_ASSESSMENT' && simulateUser === 'Worker/Technician' && (
-            <div className="bg-amber-50 rounded-3xl p-6 border border-amber-200 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div className="bg-amber-50 rounded-3xl p-6 border border-amber-200 flex flex-col gap-4">
               <div>
                 <h3 className="text-lg font-bold text-amber-800">You are assigned to this ticket.</h3>
-                <p className="text-amber-700 text-sm mt-1">Please mark as assessed once you have evaluated the issue.</p>
+                <p className="text-amber-700 text-sm mt-1">Please provide details of your fix before marking as assessed.</p>
               </div>
-              <button 
-                onClick={() => handleAction('SUBMIT_ASSESSMENT')}
-                disabled={actionLoading}
-                className="bg-amber-600 hover:bg-amber-700 disabled:opacity-50 text-white font-bold py-3 px-6 rounded-xl transition-colors whitespace-nowrap shadow-md shadow-amber-200 w-full sm:w-auto"
-              >
-                Submit Assessment
-              </button>
+              <textarea
+                rows="3"
+                placeholder="What did you fix? (e.g. 'Replaced the AC filter and verified cooling')"
+                value={resolutionNotes}
+                onChange={(e) => setResolutionNotes(e.target.value)}
+                className="w-full px-4 py-3 rounded-xl border border-amber-200 bg-white focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-colors text-sm resize-none"
+              ></textarea>
+              <div className="flex justify-end">
+                <button 
+                  onClick={() => handleAction('SUBMIT_ASSESSMENT')}
+                  disabled={actionLoading || !resolutionNotes.trim()}
+                  className="bg-amber-600 hover:bg-amber-700 disabled:opacity-50 text-white font-bold py-3 px-6 rounded-xl transition-colors whitespace-nowrap shadow-md shadow-amber-200 w-full sm:w-auto"
+                >
+                  Submit Assessment
+                </button>
+              </div>
             </div>
           )}
 
