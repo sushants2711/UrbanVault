@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getIssues, getFloors, createTicket } from '../api';
+import { getIssues, getFloors, createTicket } from '../../api';
+import QuickIssues from './QuickIssues';
+import SelectionGroup from './SelectionGroup';
 
 export default function CreateTicket() {
   const navigate = useNavigate();
@@ -94,76 +96,27 @@ export default function CreateTicket() {
 
           <form onSubmit={handleSubmit} className="space-y-8">
             
-            {/* Quick Issues Section */}
-            <div className="bg-blue-50/50 rounded-xl p-5 border border-blue-100">
-              <div className="flex items-center gap-2 mb-3">
-                <svg className="w-5 h-5 text-blue-600" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
-                </svg>
-                <h3 className="text-sm font-semibold text-blue-900">Frequently Reported (Tap to select)</h3>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {['AC not cooling', 'Internet not working', 'Pantry not cleaned', 'Lights flickering'].map(qi => {
-                  const isSelected = selectedIssues.some(id => issuesOptions.find(opt => opt.id === id)?.name === qi);
-                  return (
-                    <button
-                      type="button"
-                      key={qi}
-                      onClick={() => handleQuickIssue(qi)}
-                      className={`px-4 py-2 text-sm font-medium rounded-full transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-blue-500 ${
-                        isSelected 
-                          ? 'bg-blue-600 text-white shadow-sm border-transparent' 
-                          : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50'
-                      }`}
-                    >
-                      {qi}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
+            <QuickIssues 
+              selectedIssues={selectedIssues} 
+              handleQuickIssue={handleQuickIssue} 
+              issuesOptions={issuesOptions} 
+            />
 
-            {/* Select Issues */}
-            <div>
-              <label className="block text-sm font-medium text-gray-900 mb-3">Select Issue(s) <span className="text-red-500">*</span></label>
-              <div className="flex flex-wrap gap-2">
-                {issuesOptions.map(issue => (
-                  <button
-                    type="button"
-                    key={issue.id}
-                    onClick={() => toggleIssue(issue.id)}
-                    className={`px-4 py-2.5 text-sm font-medium rounded-lg transition-colors duration-200 focus:outline-none ${
-                      selectedIssues.includes(issue.id)
-                        ? 'bg-indigo-600 text-white border-transparent'
-                        : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 hover:border-gray-400'
-                    }`}
-                  >
-                    {issue.name}
-                  </button>
-                ))}
-              </div>
-            </div>
+            <SelectionGroup 
+              label="Select Issue(s)"
+              options={issuesOptions}
+              selectedIds={selectedIssues}
+              toggleFn={toggleIssue}
+              activeColorClass="bg-indigo-600"
+            />
 
-            {/* Select Floors */}
-            <div>
-              <label className="block text-sm font-medium text-gray-900 mb-3">Select Floor(s) <span className="text-red-500">*</span></label>
-              <div className="flex flex-wrap gap-2">
-                {floorsOptions.map(floor => (
-                  <button
-                    type="button"
-                    key={floor.id}
-                    onClick={() => toggleFloor(floor.id)}
-                    className={`px-4 py-2.5 text-sm font-medium rounded-lg transition-colors duration-200 focus:outline-none ${
-                      selectedFloors.includes(floor.id)
-                        ? 'bg-teal-600 text-white border-transparent'
-                        : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 hover:border-gray-400'
-                    }`}
-                  >
-                    {floor.name}
-                  </button>
-                ))}
-              </div>
-            </div>
+            <SelectionGroup 
+              label="Select Floor(s)"
+              options={floorsOptions}
+              selectedIds={selectedFloors}
+              toggleFn={toggleFloor}
+              activeColorClass="bg-teal-600"
+            />
 
             {/* Description */}
             <div>
