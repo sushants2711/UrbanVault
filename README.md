@@ -81,5 +81,19 @@ The application comes with a built-in Django Admin Panel that allows you to mana
 - **Ticket**: The core entity. Belongs to an `assignee` (User). Has Many-to-Many relationships with `Issue` and `Floor`.
 - **Activity**: Records any event or comment linked to a ticket (One-to-Many).
 
+## Testing
+I cannot write the test cases because I don't know some things. Normally, you would use:
+- Backend: `python manage.py test` or `pytest`
+- Frontend: `npm run test`
+
 ## Assumptions & Limitations
 - **Authentication**: Authentication was omitted. Instead, a "Simulating Role" dropdown is included in the AppBar to easily test different role views (Client, POC, Worker) when viewing a ticket.
+- **Performance**: We are not applying Redis for fast data access yet, which could be a limitation for high-traffic environments.
+
+## Actual Time Spent
+- 4 hours
+
+## Areas for Improvement
+- Apply Redis for fast data access and caching to improve performance.
+- Write unit and integration tests to ensure code reliability.
+- Implement robust authentication (e.g., JWT) to secure API endpoints.
