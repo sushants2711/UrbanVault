@@ -13,6 +13,7 @@ export default function TicketList() {
   
   const [sortBy, setSortBy] = useState('newest');
   const [filterBy, setFilterBy] = useState('all');
+  const [statusFilter, setStatusFilter] = useState('all');
 
   const fetchTickets = async () => {
     setLoading(true);
@@ -24,6 +25,10 @@ export default function TicketList() {
       
       if (filterBy !== 'all') {
         fetchedTickets = fetchedTickets.filter(t => t.floors_detail.some(f => f.name === filterBy));
+      }
+
+      if (statusFilter !== 'all') {
+        fetchedTickets = fetchedTickets.filter(t => t.status === statusFilter);
       }
       
       if (sortBy === 'newest') {
@@ -43,7 +48,7 @@ export default function TicketList() {
 
   useEffect(() => {
     fetchTickets();
-  }, [tab, page, search, sortBy, filterBy]);
+  }, [tab, page, search, sortBy, filterBy, statusFilter]);
 
   const getStatusStyles = (status) => {
     switch(status) {
@@ -92,13 +97,13 @@ export default function TicketList() {
       <div className="bg-white rounded-2xl shadow-sm border border-slate-200 mb-8 flex flex-col lg:flex-row justify-between items-stretch lg:items-center p-2 gap-4">
         <div className="flex border-b lg:border-b-0 border-slate-200 px-2 overflow-x-auto">
           <button 
-            onClick={() => { setTab(0); setPage(1); }}
+            onClick={() => { setTab(0); setPage(1); setStatusFilter('all'); }}
             className={`px-4 py-4 font-bold text-sm md:text-base whitespace-nowrap border-b-2 transition-colors ${tab === 0 ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
           >
             Active Tickets
           </button>
           <button 
-            onClick={() => { setTab(1); setPage(1); }}
+            onClick={() => { setTab(1); setPage(1); setStatusFilter('all'); }}
             className={`px-4 py-4 font-bold text-sm md:text-base whitespace-nowrap border-b-2 transition-colors ${tab === 1 ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
           >
             Resolved History
@@ -122,6 +127,19 @@ export default function TicketList() {
           </div>
 
           <div className="flex gap-2 w-full sm:w-auto">
+            {tab === 0 && (
+              <select 
+                value={statusFilter} 
+                onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
+                className="px-3 py-2 border border-slate-200 rounded-xl bg-white text-slate-700 font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500 flex-1 sm:flex-none cursor-pointer appearance-none"
+              >
+                <option value="all">All Statuses</option>
+                <option value="PENDING_ASSIGNMENT">Needs Assignment</option>
+                <option value="PENDING_ASSESSMENT">In Progress</option>
+                <option value="PENDING_REVIEW">Review Required</option>
+              </select>
+            )}
+
             <select 
               value={filterBy} 
               onChange={(e) => { setFilterBy(e.target.value); setPage(1); }}
