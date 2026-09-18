@@ -62,7 +62,20 @@ export default function CreateTicket() {
       });
       navigate('/');
     } catch (err) {
-      setError(err.response?.data?.non_field_errors?.[0] || "An error occurred while creating the ticket.");
+      const data = err.response?.data;
+      if (data) {
+        if (data.non_field_errors) {
+          setError(data.non_field_errors[0]);
+        } else if (data.issues) {
+          setError(`Issues: ${data.issues[0]}`);
+        } else if (data.floors) {
+          setError(`Floors: ${data.floors[0]}`);
+        } else {
+          setError("An error occurred while creating the ticket.");
+        }
+      } else {
+        setError("An error occurred while creating the ticket.");
+      }
       setLoading(false);
     }
   };

@@ -31,16 +31,6 @@ class TicketSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ticket
         fields = '__all__'
-        
-    def validate(self, data):
-        if self.instance is None: # Creating
-            issues = self.initial_data.get('issues', [])
-            floors = self.initial_data.get('floors', [])
-            if not issues:
-                raise serializers.ValidationError("At least one issue must be selected.")
-            if not floors:
-                raise serializers.ValidationError("At least one floor must be selected.")
-        return data
 
 class TicketActionSerializer(serializers.Serializer):
     action = serializers.ChoiceField(choices=['ASSIGN_WORKER', 'SUBMIT_ASSESSMENT', 'MARK_RESOLVED'])
