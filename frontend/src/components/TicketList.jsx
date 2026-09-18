@@ -9,11 +9,23 @@ export default function TicketList() {
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [searchInput, setSearchInput] = useState('');
   const [search, setSearch] = useState('');
-  
+
   const [sortBy, setSortBy] = useState('newest');
   const [filterBy, setFilterBy] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setSearch(searchInput);
+      setPage(1);
+    }, 800);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [searchInput]);
 
   const fetchTickets = async () => {
     setLoading(true);
@@ -22,15 +34,15 @@ export default function TicketList() {
       if (tab === 0 && statusFilter !== 'all') {
         status = statusFilter;
       }
-      
-      const response = await getTickets({ 
-        status, 
-        page, 
+
+      const response = await getTickets({
+        status,
+        page,
         search,
         floor: filterBy,
         sort_by: sortBy
       });
-      
+
       setTickets(response.data.results);
       setTotalPages(Math.ceil(response.data.count / 10));
     } catch (error) {
@@ -45,7 +57,7 @@ export default function TicketList() {
   }, [tab, page, search, sortBy, filterBy, statusFilter]);
 
   const getStatusStyles = (status) => {
-    switch(status) {
+    switch (status) {
       case 'PENDING_ASSIGNMENT': return 'bg-red-50 text-red-600 border-red-200';
       case 'PENDING_ASSESSMENT': return 'bg-amber-50 text-amber-600 border-amber-200';
       case 'PENDING_REVIEW': return 'bg-blue-50 text-blue-600 border-blue-200';
@@ -55,7 +67,7 @@ export default function TicketList() {
   };
 
   const getStatusLabel = (status) => {
-    switch(status) {
+    switch (status) {
       case 'PENDING_ASSIGNMENT': return 'Needs Assignment';
       case 'PENDING_ASSESSMENT': return 'In Progress';
       case 'PENDING_REVIEW': return 'Review Required';
@@ -76,7 +88,7 @@ export default function TicketList() {
             Track and resolve facility issues in real-time.
           </p>
         </div>
-        <button 
+        <button
           onClick={() => navigate('/create')}
           className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg shadow-indigo-200 transition duration-200 ease-in-out transform hover:-translate-y-0.5 flex items-center gap-2 whitespace-nowrap"
         >
@@ -90,13 +102,13 @@ export default function TicketList() {
       {/* Controls Bar */}
       <div className="bg-white rounded-2xl shadow-sm border border-slate-200 mb-8 flex flex-col lg:flex-row justify-between items-stretch lg:items-center p-2 gap-4">
         <div className="flex border-b lg:border-b-0 border-slate-200 px-2 overflow-x-auto">
-          <button 
+          <button
             onClick={() => { setTab(0); setPage(1); setStatusFilter('all'); }}
             className={`px-4 py-4 font-bold text-sm md:text-base whitespace-nowrap border-b-2 transition-colors ${tab === 0 ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
           >
             Active Tickets
           </button>
-          <button 
+          <button
             onClick={() => { setTab(1); setPage(1); setStatusFilter('all'); }}
             className={`px-4 py-4 font-bold text-sm md:text-base whitespace-nowrap border-b-2 transition-colors ${tab === 1 ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
           >
@@ -111,19 +123,19 @@ export default function TicketList() {
                 <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd" />
               </svg>
             </div>
-            <input 
-              type="text" 
+            <input
+              type="text"
               placeholder="Search issues..."
-              value={search}
-              onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
               className="pl-10 pr-4 py-2 w-full sm:w-64 border border-slate-200 rounded-xl bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-colors"
             />
           </div>
 
           <div className="flex gap-2 w-full sm:w-auto">
             {tab === 0 && (
-              <select 
-                value={statusFilter} 
+              <select
+                value={statusFilter}
                 onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
                 className="px-3 py-2 border border-slate-200 rounded-xl bg-white text-slate-700 font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500 flex-1 sm:flex-none cursor-pointer appearance-none"
               >
@@ -134,8 +146,8 @@ export default function TicketList() {
               </select>
             )}
 
-            <select 
-              value={filterBy} 
+            <select
+              value={filterBy}
               onChange={(e) => { setFilterBy(e.target.value); setPage(1); }}
               className="px-3 py-2 border border-slate-200 rounded-xl bg-white text-slate-700 font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500 flex-1 sm:flex-none cursor-pointer appearance-none"
             >
@@ -145,8 +157,8 @@ export default function TicketList() {
               ))}
             </select>
 
-            <select 
-              value={sortBy} 
+            <select
+              value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
               className="px-3 py-2 border border-slate-200 rounded-xl bg-white text-slate-700 font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500 flex-1 sm:flex-none cursor-pointer appearance-none"
             >
@@ -173,8 +185,8 @@ export default function TicketList() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
           {tickets.map((ticket) => (
-            <div 
-              key={ticket.id} 
+            <div
+              key={ticket.id}
               onClick={() => navigate(`/ticket/${ticket.id}`)}
               className="group bg-white rounded-2xl border border-slate-200 p-5 lg:p-6 cursor-pointer hover:shadow-lg hover:border-indigo-200 transition-all duration-200 flex flex-col justify-between"
             >
@@ -191,7 +203,7 @@ export default function TicketList() {
                   {ticket.issues_detail.map(i => i.name).join(' • ')}
                 </h2>
               </div>
-              
+
               <div className="mt-6 pt-4 border-t border-slate-100 flex justify-between items-center text-sm font-semibold text-slate-500">
                 <span>Created {new Date(ticket.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
                 <span className="text-indigo-600 group-hover:underline">View Details &rarr;</span>
@@ -208,11 +220,10 @@ export default function TicketList() {
             <button
               key={idx}
               onClick={() => setPage(idx + 1)}
-              className={`w-10 h-10 rounded-xl font-bold flex items-center justify-center transition-colors ${
-                page === idx + 1 
-                  ? 'bg-indigo-600 text-white shadow-md' 
+              className={`w-10 h-10 rounded-xl font-bold flex items-center justify-center transition-colors ${page === idx + 1
+                  ? 'bg-indigo-600 text-white shadow-md'
                   : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
-              }`}
+                }`}
             >
               {idx + 1}
             </button>

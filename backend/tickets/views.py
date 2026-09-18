@@ -43,8 +43,13 @@ class TicketViewSet(viewsets.ModelViewSet):
         
         search_query = self.request.query_params.get('search', None)
         if search_query:
-            # Search by description or ticket ID (useful for operations)
-            queryset = queryset.filter(description__icontains=search_query)
+            from django.db.models import Q
+            # Search by description, issue name, or ticket ID
+            queryset = queryset.filter(
+                Q(description__icontains=search_query) |
+                Q(issues__name__icontains=search_query) |
+                Q(id__icontains=search_query)
+            ).distinct()
 
         floor_filter = self.request.query_params.get('floor', None)
         if floor_filter and floor_filter != 'all':
