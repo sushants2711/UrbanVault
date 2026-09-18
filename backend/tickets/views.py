@@ -9,15 +9,15 @@ class StandardResultsSetPagination(pagination.PageNumberPagination):
     page_size_query_param = 'page_size'
     max_page_size = 100
 
-class UserViewSet(viewsets.ReadOnlyModelViewSet):
+class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
-class IssueViewSet(viewsets.ReadOnlyModelViewSet):
+class IssueViewSet(viewsets.ModelViewSet):
     queryset = Issue.objects.all()
     serializer_class = IssueSerializer
 
-class FloorViewSet(viewsets.ReadOnlyModelViewSet):
+class FloorViewSet(viewsets.ModelViewSet):
     queryset = Floor.objects.all()
     serializer_class = FloorSerializer
 

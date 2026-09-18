@@ -1,3 +1,6 @@
+import { useState, useEffect } from 'react';
+import { getFloors } from '../../api/api';
+
 export default function ListControls({
   tab, setTab,
   searchInput, setSearchInput,
@@ -6,6 +9,20 @@ export default function ListControls({
   sortBy, setSortBy,
   setPage
 }) {
+  const [floors, setFloors] = useState([]);
+
+  useEffect(() => {
+    const fetchFloors = async () => {
+      try {
+        const response = await getFloors();
+        setFloors(response.data);
+      } catch (err) {
+        console.error("Error fetching floors:", err);
+      }
+    };
+    fetchFloors();
+  }, []);
+
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-slate-200 mb-8 flex flex-col lg:flex-row justify-between items-stretch lg:items-center p-2 gap-4">
       <div className="flex border-b lg:border-b-0 border-slate-200 px-2 overflow-x-auto">
@@ -59,8 +76,8 @@ export default function ListControls({
             className="px-3 py-2 border border-slate-200 rounded-xl bg-white text-slate-700 font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500 flex-1 sm:flex-none cursor-pointer appearance-none"
           >
             <option value="all">All Floors</option>
-            {['1F', '2F', '3F', '4F', '5F'].map(f => (
-              <option key={f} value={f}>{f}</option>
+            {floors.map(f => (
+              <option key={f.id} value={f.name}>{f.name}</option>
             ))}
           </select>
 
